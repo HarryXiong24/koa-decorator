@@ -1,0 +1,49 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  // svg 当做 html 解析
+  "files.associations": {
+    "*.svg": "html",
+    // 识别所有 rc 配置文件
+    "*rc": "json"
+  },
+  // 保存时 eslint 自动 fix
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  // 保存自动格式化
+  "editor.formatOnSave": true,
+  // 文件保存最后空一行
+  "files.insertFinalNewline": true,
+  // eslint 校验文件
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  // 配置默认的格式化工具
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
