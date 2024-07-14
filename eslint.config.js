@@ -99,4 +99,16 @@ module.exports = {
       },
     },
   ],
+  ignores: [
+    'node_modules',
+    'dist',
+    'dist-ssr',
+    'coverage',
+    'public',
+    'jest.config.ts',
+    'coverages',
+    'rollup.config.js',
+    'types',
+    'commitlint.config.js',
+  ],
 };
