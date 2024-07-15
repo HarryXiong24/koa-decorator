@@ -8,7 +8,7 @@ import 'reflect-metadata';
  * @returns InjectService
  */
 export function Inject(typeOrName?: string) {
-  return function InjectService<T extends Object>(
+  return function <T extends Object>(
     target: T,
     key: string | symbol,
     index?: number
@@ -21,7 +21,7 @@ export function Inject(typeOrName?: string) {
       ).name;
     }
 
-    Container.registerHandler(target.constructor, {
+    Container.registerInjectedHandler(target.constructor, {
       object: target,
       key: key as string,
       type: typeOrName,
@@ -29,24 +29,3 @@ export function Inject(typeOrName?: string) {
     });
   };
 }
-
-// Example
-// @Service()
-// class UserService {
-//   public getUsers() {
-//     console.log('Fetching users...');
-//   }
-// }
-
-// @Controller('/home')
-// class UserController {
-//   @Inject()
-//   userService!: UserService;
-
-//   public call() {
-//     this.userService.getUsers();
-//   }
-// }
-
-// const userController = new UserController();
-// console.log(Reflect.getMetadata('design:type', userController, 'userService'));

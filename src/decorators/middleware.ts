@@ -1,22 +1,21 @@
 import 'reflect-metadata';
-import { CONTROLLER_ROUTE_PATH_METADATA } from '../constants';
+import { MIDDLEWARE_METADATA } from '../constants';
 import Container from '../container';
 import { Constructor } from '../types/basic';
 
 /**
- * Controller decorator, used to define the prefix of the controller
- *
+ * Middleware decorator, used to define the prefix of the middleware
  * @param prefix
  * @returns
  */
-export function Controller(routePrefix: string) {
+export function Middleware(middlewareIdentifier?: string) {
   return function <T extends Constructor>(target: T) {
     Reflect.defineMetadata(
-      CONTROLLER_ROUTE_PATH_METADATA,
-      routePrefix,
+      MIDDLEWARE_METADATA,
+      middlewareIdentifier,
       target.prototype
     );
-    Container.setController({
+    Container.setMiddleware({
       id: target.name,
       type: target,
       value: undefined,

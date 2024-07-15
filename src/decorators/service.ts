@@ -1,4 +1,4 @@
-import { METADATA_CONTROLLER_ROUTE_PATH } from '../constants';
+import { CONTROLLER_ROUTE_PATH_METADATA } from '../constants';
 import Container from '../container';
 import { Constructor } from '../types/basic';
 
@@ -8,13 +8,13 @@ import { Constructor } from '../types/basic';
  * @returns
  */
 export function Service(serviceIdentifier?: string) {
-  return function classDecorator<T extends Constructor>(target: T) {
+  return function <T extends Constructor>(target: T) {
     Reflect.defineMetadata(
-      METADATA_CONTROLLER_ROUTE_PATH,
+      CONTROLLER_ROUTE_PATH_METADATA,
       serviceIdentifier,
       target.prototype
     );
-    Container.set({
+    Container.setController({
       id: serviceIdentifier || target.name,
       type: target,
       value: undefined,
@@ -22,15 +22,3 @@ export function Service(serviceIdentifier?: string) {
     });
   };
 }
-
-// Example
-// @Service('/api/users')
-// class UserService {
-//   getUsers() {
-//     console.log('Fetching users...');
-//   }
-// }
-
-// console.log(Reflect.getMetadata(METADATA_CONTROLLER_ROUTE_PATH, UserService.prototype));
-// const userService = Container.get(UserService);
-// userService.getUsers();

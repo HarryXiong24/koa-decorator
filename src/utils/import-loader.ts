@@ -32,7 +32,11 @@ function getAllFiles(dir: string, files: string[] = []) {
   return files;
 }
 
-export function loadControllers(dir: string) {
+/**
+ * Load all Import in the given directory
+ * @param dir
+ */
+export function loadImport(dir: string) {
   const filePaths = getAllFiles(dir);
   for (const filePath of filePaths) {
     try {
