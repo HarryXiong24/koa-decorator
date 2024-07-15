@@ -1,14 +1,8 @@
-export type ServiceIdentifier = Function | string;
+export type DependencyIdentifier = Function | string;
 
-export interface ServiceMetadata {
-  id?: ServiceIdentifier;
+export interface DependencyMetadata {
+  id?: DependencyIdentifier;
   type?: Function;
   value?: any;
   transient?: boolean;
-}
-
-export interface ServiceOptions {
-  id?: string;
-  transient?: boolean;
-  multiple?: boolean;
 }

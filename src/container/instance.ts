@@ -1,21 +1,21 @@
-import { ServiceIdentifier, ServiceMetadata } from '../types/service';
-import { Handler } from '../types/handler';
-import { RouterHandler } from '../types/router-handler';
+import { DependencyIdentifier, DependencyMetadata } from '../types/service';
+import { InjectedHandler } from '../types/handler';
+import { RouterHandler } from '../types/handler';
 import 'reflect-metadata';
 
 export default class ContainerInstance {
-  private container: ServiceMetadata[] = [];
-  private handlers: Map<Function, Handler[]> = new Map();
+  private container: DependencyMetadata[] = [];
+  private handlers: Map<Function, InjectedHandler[]> = new Map();
   public routers: RouterHandler[] = [];
 
   /**
-   * Find service by identifier
+   * Find Dependency by identifier
    * @param identifier
-   * @returns ServiceMetadata
+   * @returns DependencyMetadata
    */
   private findService(
-    identifier: ServiceIdentifier
-  ): ServiceMetadata | undefined {
+    identifier: DependencyIdentifier
+  ): DependencyMetadata | undefined {
     return this.container.find((service) => {
       return service.id === identifier || service.type === identifier;
     });
@@ -56,7 +56,7 @@ export default class ContainerInstance {
    * @param identifier
    * @returns
    */
-  public get(identifier: ServiceIdentifier) {
+  public get(identifier: DependencyIdentifier) {
     console.log({
       identifier: identifier,
       container: this.container,
@@ -88,8 +88,10 @@ export default class ContainerInstance {
       const arr = this.handlers.get(type) || [];
       arr.forEach((handler) => {
         value[handler.key] = this.get(handler.type);
+        console.log('value[handler.key]', value[handler.key]);
       });
     }
+    console.log('handler', value);
 
     if (!service.transient) {
       service.value = value;
@@ -98,7 +100,7 @@ export default class ContainerInstance {
     return value;
   }
 
-  public set(service: ServiceMetadata) {
+  public set(service: DependencyMetadata) {
     this.container.push(service);
   }
 
@@ -111,7 +113,7 @@ export default class ContainerInstance {
    * @param identifier
    * @param handler
    */
-  public registerHandler(identifier: Function, handler: Handler) {
+  public registerHandler(identifier: Function, handler: InjectedHandler) {
     if (this.handlers.get(identifier)) {
       const handlers = this.handlers.get(identifier) || [];
       handlers.push(handler);

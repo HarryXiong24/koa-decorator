@@ -3,11 +3,11 @@ import Router from '@koa/router';
 import bodyParser from 'koa-bodyparser';
 import { ApplicationOptions } from './types/app-options';
 import Container from './container';
-import { METADATA_CONTROLLER_PREFIX } from './constants';
-import { loadControllers } from './utils';
+import { METADATA_CONTROLLER_ROUTE_PATH } from './constants';
+import { loadControllers } from './utils/controller-loader';
 import * as path from 'path';
 import 'reflect-metadata';
-import { RouterHandler } from './types/router-handler';
+import { RouterHandler } from './types/handler';
 
 /**
  * Application class, extends from Koa
@@ -57,7 +57,7 @@ export default class Application extends Koa {
       const instance = Container.get(item.serviceIdentifier);
       // get prefix from controller, like @Controller('/prefix')
       const prefix =
-        Reflect.getMetadata(METADATA_CONTROLLER_PREFIX, instance) || '';
+        Reflect.getMetadata(METADATA_CONTROLLER_ROUTE_PATH, instance) || '';
       this.router[item.method](
         prefix + item.path,
         (instance[item.methodName] as Function).bind(instance)

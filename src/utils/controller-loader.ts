@@ -6,23 +6,23 @@ function getAllFiles(dir: string, files: string[] = []) {
     const entries = readdirSync(dir);
 
     for (const entry of entries) {
-      const fullpath = path.join(dir, entry);
+      const fullPath = path.join(dir, entry);
       let stats;
       try {
-        stats = statSync(fullpath);
+        stats = statSync(fullPath);
       } catch (error) {
-        console.error(`Error getting stats for file: ${fullpath}`, error);
+        console.error(`Error getting stats for file: ${fullPath}`, error);
         continue;
       }
 
       if (stats.isDirectory()) {
-        getAllFiles(fullpath, files);
+        getAllFiles(fullPath, files);
       } else if (
         stats.isFile() &&
         /\.(ts|js)$/.test(entry) &&
         !entry.endsWith('.d.ts')
       ) {
-        files.push(fullpath);
+        files.push(fullPath);
       }
     }
   } catch (error) {
@@ -33,12 +33,12 @@ function getAllFiles(dir: string, files: string[] = []) {
 }
 
 export function loadControllers(dir: string) {
-  const filepaths = getAllFiles(dir);
-  for (const filepath of filepaths) {
+  const filePaths = getAllFiles(dir);
+  for (const filePath of filePaths) {
     try {
-      require(filepath);
+      require(filePath);
     } catch (error) {
-      console.error(`Error loading controller file: ${filepath}`, error);
+      console.error(`Error loading controller file: ${filePath}`, error);
     }
   }
 }

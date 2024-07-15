@@ -1,4 +1,4 @@
-import { METADATA_CONTROLLER_PREFIX } from '../constants';
+import { METADATA_CONTROLLER_ROUTE_PATH } from '../constants';
 import Container from '../container';
 import { Constructor } from '../types/basic';
 
@@ -10,7 +10,7 @@ import { Constructor } from '../types/basic';
 export function Service(serviceIdentifier?: string) {
   return function classDecorator<T extends Constructor>(target: T) {
     Reflect.defineMetadata(
-      METADATA_CONTROLLER_PREFIX,
+      METADATA_CONTROLLER_ROUTE_PATH,
       serviceIdentifier,
       target.prototype
     );
@@ -31,6 +31,6 @@ export function Service(serviceIdentifier?: string) {
 //   }
 // }
 
-// console.log(Reflect.getMetadata(METADATA_CONTROLLER_PREFIX, UserService.prototype));
+// console.log(Reflect.getMetadata(METADATA_CONTROLLER_ROUTE_PATH, UserService.prototype));
 // const userService = Container.get(UserService);
 // userService.getUsers();

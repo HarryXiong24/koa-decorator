@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { METADATA_CONTROLLER_PREFIX } from '../constants';
+import { METADATA_CONTROLLER_ROUTE_PATH } from '../constants';
 import Container from '../container';
 import { Constructor } from '../types/basic';
 
@@ -12,7 +12,7 @@ import { Constructor } from '../types/basic';
 export function Controller(prefix: string) {
   return function classDecorator<T extends Constructor>(target: T) {
     Reflect.defineMetadata(
-      METADATA_CONTROLLER_PREFIX,
+      METADATA_CONTROLLER_ROUTE_PATH,
       prefix,
       target.prototype
     );
@@ -33,6 +33,6 @@ export function Controller(prefix: string) {
 //   }
 // }
 
-// console.log(Reflect.getMetadata(METADATA_CONTROLLER_PREFIX, UserController.prototype));
+// console.log(Reflect.getMetadata(METADATA_CONTROLLER_ROUTE_PATH, UserController.prototype));
 // const user = Container.get(UserController.name);
 // user.getUsers();
