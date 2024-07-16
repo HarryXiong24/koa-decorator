@@ -10,6 +10,10 @@ export default class Container {
     return Container.containerInstance.getController(identifier);
   }
 
+  public static getAllControllers() {
+    return Container.containerInstance.getAllControllers();
+  }
+
   public static getMiddleware(identifier: DependencyIdentifier) {
     return Container.containerInstance.getMiddleware(identifier);
   }

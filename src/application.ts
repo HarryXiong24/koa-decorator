@@ -40,7 +40,7 @@ export default class Application extends Koa {
     this.use(this.router.allowedMethods());
   }
 
-  initMiddlewares() {
+  private initMiddlewares() {
     if (this.options.middlewares) {
       const middlewares = this.options.middlewares || [];
 
@@ -69,7 +69,7 @@ export default class Application extends Koa {
     }
   }
 
-  initRouter() {
+  private initRouter() {
     // load controllers from the specified directory
     const dir = path.join(
       process.cwd(),

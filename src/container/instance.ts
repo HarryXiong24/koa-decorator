@@ -6,6 +6,7 @@ import 'reflect-metadata';
 
 interface ControllerContainer {
   getController: (identifier: DependencyIdentifier) => Object;
+  getAllControllers: () => DependencyMetadata[];
   setController: (dependency: DependencyMetadata) => void;
 }
 
@@ -126,6 +127,12 @@ export default class ContainerInstance
     return instance;
   }
 
+  public getAllControllers(): Object[] {
+    return this.controllerContainer.map((item) => {
+      return this.getController(item.id as string);
+    });
+  }
+
   public getMiddleware(identifier: DependencyIdentifier): Object {
     console.log('getMiddleware', {
       identifier: identifier,
@@ -178,11 +185,9 @@ export default class ContainerInstance
 
   public getAllMiddlewares(): Object[] {
     console.log('getAllMiddlewares', this.middlewareContainer);
-    const res = this.middlewareContainer.map((item) => {
+    return this.middlewareContainer.map((item) => {
       return this.getMiddleware(item.id as string);
     });
-    console.log(res);
-    return res;
   }
 
   public setController(dependency: DependencyMetadata): void {
@@ -211,6 +216,10 @@ export default class ContainerInstance
     }
   }
 
+  /**
+   * Register router, add router to the routers array
+   * @param router
+   */
   public registerRouter(router: RouterHandler) {
     this.routers.push(router);
   }
