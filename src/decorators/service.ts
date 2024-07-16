@@ -17,8 +17,7 @@ export function Service(serviceIdentifier?: string) {
     Container.setController({
       id: serviceIdentifier || target.name,
       type: target,
-      value: undefined,
-      transient: undefined,
+      transient: false,
     });
   };
 }

@@ -28,11 +28,11 @@ export default class Container {
 
   public static registerInjectedHandler(
     identifier: Function,
-    handler: InjectedHandler
+    injectedHandler: InjectedHandler
   ) {
     return Container.containerInstance.registerInjectedHandler(
       identifier,
-      handler
+      injectedHandler
     );
   }
 

@@ -19,7 +19,6 @@ export function Controller(routePrefix: string) {
     Container.setController({
       id: target.name,
       type: target,
-      value: undefined,
       transient: false,
     });
   };

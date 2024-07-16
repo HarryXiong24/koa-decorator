@@ -1,36 +1,39 @@
 import { DependencyIdentifier, DependencyMetadata } from '../types/dependency';
+import { InstanceType } from '../types/basic';
 import { InjectedHandler } from '../types/handler';
 import { RouterHandler } from '../types/handler';
 import 'reflect-metadata';
 
-export default class ContainerInstance {
+interface ControllerContainer {
+  getController: (identifier: DependencyIdentifier) => Object;
+  setController: (dependency: DependencyMetadata) => void;
+}
+
+interface MiddlewareContainer {
+  getMiddleware: (identifier: DependencyIdentifier) => Object;
+  getAllMiddlewares: () => DependencyMetadata[];
+  setMiddleware: (dependency: DependencyMetadata) => void;
+}
+
+export default class ContainerInstance
+  implements ControllerContainer, MiddlewareContainer
+{
   private controllerContainer: DependencyMetadata[] = [];
   private middlewareContainer: DependencyMetadata[] = [];
-  private handlers: Map<Function, InjectedHandler[]> = new Map();
+  private injectedHandlers: Map<InstanceType, InjectedHandler[]> = new Map();
   public routers: RouterHandler[] = [];
 
   /**
-   * Find Dependency by identifier
+   * find specific dependency based on identifier in the container
    * @param identifier
-   * @returns DependencyMetadata
+   * @param container
+   * @returns DependencyMetadata | undefined
    */
-  private findController(
-    identifier: DependencyIdentifier
+  private findDependency(
+    identifier: DependencyIdentifier,
+    container: DependencyMetadata[]
   ): DependencyMetadata | undefined {
-    return this.controllerContainer.find((dependency) => {
-      return dependency.id === identifier || dependency.type === identifier;
-    });
-  }
-
-  /**
-   * Get dependency by identifier
-   * @param identifier
-   * @returns DependencyMetadata
-   */
-  private findMiddleware(
-    identifier: DependencyIdentifier
-  ): DependencyMetadata | undefined {
-    return this.middlewareContainer.find((dependency) => {
+    return container.find((dependency) => {
       return dependency.id === identifier || dependency.type === identifier;
     });
   }
@@ -52,29 +55,18 @@ export default class ContainerInstance {
    * @param paramTypes
    * @returns any[]
    */
-  private initializeControllerParams(paramTypes: any[]): any[] {
+  private initializeParams(
+    paramTypes: any[],
+    getMethod: (identifier: DependencyIdentifier) => Object
+  ): (Object | undefined)[] {
     return paramTypes.map((paramType) => {
       if (
         paramType &&
         paramType.name &&
         !this.isTypePrimitive(paramType.name)
       ) {
-        return this.getController(paramType);
+        return getMethod(paramType);
       }
-      return undefined;
-    });
-  }
-
-  private initializeMiddlewareParams(paramTypes: any[]): any[] {
-    return paramTypes.map((paramType) => {
-      if (
-        paramType &&
-        paramType.name &&
-        !this.isTypePrimitive(paramType.name)
-      ) {
-        return this.getMiddleware(paramType);
-      }
-      return undefined;
     });
   }
 
@@ -83,17 +75,20 @@ export default class ContainerInstance {
    * @param identifier
    * @returns
    */
-  public getController(identifier: DependencyIdentifier) {
+  public getController(identifier: DependencyIdentifier): Object {
     console.log('getController', {
       identifier: identifier,
       container: this.controllerContainer,
     });
-    const dependency = this.findController(identifier);
+    const dependency = this.findDependency(
+      identifier,
+      this.controllerContainer
+    );
     if (!dependency) {
       throw new Error(`${identifier} dependency not found`);
     }
-    if (dependency.value) {
-      return dependency.value;
+    if (dependency.instance) {
+      return dependency.instance;
     }
 
     // Get the class of the dependency
@@ -106,40 +101,45 @@ export default class ContainerInstance {
 
     // Get the constructor params
     const paramTypes = Reflect.getMetadata('design:paramtypes', type);
+    console.log('paramTypes', paramTypes);
     // Initialize the params
     const params: any[] = paramTypes
-      ? this.initializeControllerParams(paramTypes)
+      ? this.initializeParams(paramTypes, this.getController)
       : [];
+
     // Create a new instance of the dependency with the initialized params
-    const value = new (type.bind.apply(type, [null, ...params]))();
+    // For example: const value = new (MyClass.bind.apply(MyClass, [null, ...params]))();
+    // Equal to: const value = new MyClass(arg1, arg2);
+    const instance = new (type.bind.apply(type, [null, ...params]))() as Record<
+      string,
+      any
+    >;
     // Get the handlers for the dependency
-    if (this.handlers.has(type)) {
-      const arr = this.handlers.get(type) || [];
+    if (this.injectedHandlers.has(type)) {
+      const arr: InjectedHandler[] = this.injectedHandlers.get(type) || [];
       arr.forEach((handler) => {
-        value[handler.key] = this.getController(handler.type);
-        console.log('value[handler.key]', value[handler.key]);
+        // value.xxx = xxx
+        instance[handler.key] = this.getController(handler.type);
       });
     }
-    console.log('handler', value);
 
-    if (!dependency.transient) {
-      dependency.value = value;
-    }
-
-    return value;
+    return instance;
   }
 
-  public getMiddleware(identifier: DependencyIdentifier) {
+  public getMiddleware(identifier: DependencyIdentifier): Object {
     console.log('getMiddleware', {
       identifier: identifier,
       container: this.middlewareContainer,
     });
-    const dependency = this.findMiddleware(identifier);
+    const dependency = this.findDependency(
+      identifier,
+      this.middlewareContainer
+    );
     if (!dependency) {
       throw new Error(`${identifier} dependency not found`);
     }
-    if (dependency.value) {
-      return dependency.value;
+    if (dependency.instance) {
+      return dependency.instance;
     }
 
     // Get the class of the dependency
@@ -154,56 +154,60 @@ export default class ContainerInstance {
     const paramTypes = Reflect.getMetadata('design:paramtypes', type);
     // Initialize the params
     const params: any[] = paramTypes
-      ? this.initializeMiddlewareParams(paramTypes)
+      ? this.initializeParams(paramTypes, this.getMiddleware)
       : [];
     // Create a new instance of the dependency with the initialized params
-    const value = new (type.bind.apply(type, [null, ...params]))();
+    const instance = new (type.bind.apply(type, [null, ...params]))() as Record<
+      string,
+      any
+    >;
     // Get the handlers for the dependency
-    if (this.handlers.has(type)) {
-      const arr = this.handlers.get(type) || [];
+    if (this.injectedHandlers.has(type)) {
+      const arr = this.injectedHandlers.get(type) || [];
       arr.forEach((handler) => {
-        value[handler.key] = this.getMiddleware(handler.type);
+        instance[handler.key] = this.getMiddleware(handler.type);
       });
     }
 
     if (!dependency.transient) {
-      dependency.value = value;
+      dependency.instance = instance;
     }
 
-    return value;
+    return instance;
   }
 
-  public getAllMiddlewares() {
-    return this.middlewareContainer;
+  public getAllMiddlewares(): Object[] {
+    console.log('getAllMiddlewares', this.middlewareContainer);
+    const res = this.middlewareContainer.map((item) => {
+      return this.getMiddleware(item.id as string);
+    });
+    console.log(res);
+    return res;
   }
 
-  public setController(dependency: DependencyMetadata) {
+  public setController(dependency: DependencyMetadata): void {
     this.controllerContainer.push(dependency);
   }
 
-  public setMiddleware(dependency: DependencyMetadata) {
+  public setMiddleware(dependency: DependencyMetadata): void {
     this.middlewareContainer.push(dependency);
   }
 
-  public exist(): boolean {
-    return true;
-  }
-
   /**
-   * Register handler
+   * Register injected handler
    * @param identifier
    * @param handler
    */
   public registerInjectedHandler(
     identifier: Function,
-    handler: InjectedHandler
+    injectedHandler: InjectedHandler
   ) {
-    if (this.handlers.get(identifier)) {
-      const handlers = this.handlers.get(identifier) || [];
-      handlers.push(handler);
-      this.handlers.set(identifier, handlers);
+    if (this.injectedHandlers.get(identifier)) {
+      const handlers = this.injectedHandlers.get(identifier) || [];
+      handlers.push(injectedHandler);
+      this.injectedHandlers.set(identifier, handlers);
     } else {
-      this.handlers.set(identifier, [handler]);
+      this.injectedHandlers.set(identifier, [injectedHandler]);
     }
   }
 

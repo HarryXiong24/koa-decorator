@@ -3,10 +3,7 @@ import Router from '@koa/router';
 import bodyParser from 'koa-bodyparser';
 import { ApplicationOptions } from './types/app-options';
 import Container from './container';
-import {
-  CONTROLLER_ROUTE_PATH_METADATA,
-  MIDDLEWARE_METADATA,
-} from './constants';
+import { CONTROLLER_ROUTE_PATH_METADATA } from './constants';
 import { loadImport } from './utils/import-loader';
 import * as path from 'path';
 import 'reflect-metadata';
@@ -51,7 +48,7 @@ export default class Application extends Koa {
         this.use(m);
       });
     } else {
-      const middlewaresName: any[] = [];
+      const middlewaresClassCollection: Record<string, any>[] = [];
 
       const dir = path.join(
         process.cwd(),
@@ -60,16 +57,15 @@ export default class Application extends Koa {
       // load middlewares
       loadImport(dir);
 
-      Container.getAllMiddlewares().forEach((item: DependencyMetadata) => {
-        middlewaresName.push(item.type);
+      Container.getAllMiddlewares().forEach((item: Object) => {
+        middlewaresClassCollection.push(item);
       });
 
-      middlewaresName.forEach((item) => {
-        const ErrorHandlerClass = item;
-
-        const errorHandlerInstance = new ErrorHandlerClass();
-        this.use(errorHandlerInstance.use());
-      });
+      middlewaresClassCollection.forEach(
+        (middlewareClass: Record<string, any>) => {
+          this.use(middlewareClass.use);
+        }
+      );
     }
   }
 
@@ -91,7 +87,9 @@ export default class Application extends Koa {
         Reflect.getMetadata(CONTROLLER_ROUTE_PATH_METADATA, instance) || '';
       this.router[item.method](
         prefix + item.path,
-        (instance[item.methodName] as Function).bind(instance)
+        ((instance as Record<string, any>)[item.methodName] as Function).bind(
+          instance
+        )
       );
     });
   }

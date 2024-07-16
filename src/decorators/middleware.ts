@@ -18,7 +18,6 @@ export function Middleware(middlewareIdentifier?: string) {
     Container.setMiddleware({
       id: target.name,
       type: target,
-      value: undefined,
       transient: false,
     });
   };

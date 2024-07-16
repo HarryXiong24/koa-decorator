@@ -10,13 +10,13 @@
   "author": "Harry Xiong",
   "license": "MIT",
   "dependencies": {
-    "koa": "^2.11.0"
+    "koa": "^2.15.3"
   },
   "devDependencies": {
-    "@types/koa": "^2.11.0",
-    "@types/node": "^13.1.7",
-    "nodemon": "^2.0.2",
-    "ts-node": "^8.6.2",
-    "typescript": "^3.7.5"
+    "@types/koa": "^2.15.0",
+    "@types/node": "^20.14.10",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
   }
 }
