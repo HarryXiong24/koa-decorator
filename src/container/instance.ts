@@ -10,6 +10,12 @@ interface ControllerContainer {
   setController: (dependency: DependencyMetadata) => void;
 }
 
+interface ServiceContainer {
+  getService: (identifier: DependencyIdentifier) => Object;
+  getAllServices: () => DependencyMetadata[];
+  setService: (dependency: DependencyMetadata) => void;
+}
+
 interface MiddlewareContainer {
   getMiddleware: (identifier: DependencyIdentifier) => Object;
   getAllMiddlewares: () => DependencyMetadata[];
@@ -17,10 +23,11 @@ interface MiddlewareContainer {
 }
 
 export default class ContainerInstance
-  implements ControllerContainer, MiddlewareContainer
+  implements ControllerContainer, ServiceContainer, MiddlewareContainer
 {
   private controllerContainer: DependencyMetadata[] = [];
   private middlewareContainer: DependencyMetadata[] = [];
+  private serviceContainer: DependencyMetadata[] = [];
   private injectedHandlers: Map<InstanceType, InjectedHandler[]> = new Map();
   public routers: RouterHandler[] = [];
 
@@ -72,15 +79,41 @@ export default class ContainerInstance
   }
 
   /**
+   * Register injected handler
+   * @param identifier
+   * @param handler
+   */
+  public registerInjectedHandler(
+    identifier: Function,
+    injectedHandler: InjectedHandler
+  ) {
+    if (this.injectedHandlers.get(identifier)) {
+      const handlers = this.injectedHandlers.get(identifier) || [];
+      handlers.push(injectedHandler);
+      this.injectedHandlers.set(identifier, handlers);
+    } else {
+      this.injectedHandlers.set(identifier, [injectedHandler]);
+    }
+  }
+
+  /**
+   * Register router, add router to the routers array
+   * @param router
+   */
+  public registerRouter(router: RouterHandler) {
+    this.routers.push(router);
+  }
+
+  /**
    * Get dependency by identifier and return the value, if not found throw an error
    * @param identifier
    * @returns
    */
   public getController(identifier: DependencyIdentifier): Object {
-    console.log('getController', {
-      identifier: identifier,
-      container: this.controllerContainer,
-    });
+    // console.log('getController', {
+    //   identifier: identifier,
+    //   container: this.controllerContainer,
+    // });
     const dependency = this.findDependency(
       identifier,
       this.controllerContainer
@@ -102,7 +135,7 @@ export default class ContainerInstance
 
     // Get the constructor params
     const paramTypes = Reflect.getMetadata('design:paramtypes', type);
-    console.log('paramTypes', paramTypes);
+
     // Initialize the params
     const params: any[] = paramTypes
       ? this.initializeParams(paramTypes, this.getController)
@@ -115,13 +148,18 @@ export default class ContainerInstance
       string,
       any
     >;
+
     // Get the handlers for the dependency
     if (this.injectedHandlers.has(type)) {
       const arr: InjectedHandler[] = this.injectedHandlers.get(type) || [];
       arr.forEach((handler) => {
         // value.xxx = xxx
-        instance[handler.key] = this.getController(handler.type);
+        instance[handler.propertyKey] = this.getService(handler.type);
       });
+    }
+
+    if (!dependency.transient) {
+      dependency.instance = instance;
     }
 
     return instance;
@@ -133,11 +171,15 @@ export default class ContainerInstance
     });
   }
 
+  /**
+   * Set controller to the container
+   * @param dependency
+   */
+  public setController(dependency: DependencyMetadata): void {
+    this.controllerContainer.push(dependency);
+  }
+
   public getMiddleware(identifier: DependencyIdentifier): Object {
-    console.log('getMiddleware', {
-      identifier: identifier,
-      container: this.middlewareContainer,
-    });
     const dependency = this.findDependency(
       identifier,
       this.middlewareContainer
@@ -168,11 +210,12 @@ export default class ContainerInstance
       string,
       any
     >;
+
     // Get the handlers for the dependency
     if (this.injectedHandlers.has(type)) {
       const arr = this.injectedHandlers.get(type) || [];
       arr.forEach((handler) => {
-        instance[handler.key] = this.getMiddleware(handler.type);
+        instance[handler.propertyKey] = this.getService(handler.type);
       });
     }
 
@@ -184,43 +227,65 @@ export default class ContainerInstance
   }
 
   public getAllMiddlewares(): Object[] {
-    console.log('getAllMiddlewares', this.middlewareContainer);
     return this.middlewareContainer.map((item) => {
       return this.getMiddleware(item.id as string);
     });
-  }
-
-  public setController(dependency: DependencyMetadata): void {
-    this.controllerContainer.push(dependency);
   }
 
   public setMiddleware(dependency: DependencyMetadata): void {
     this.middlewareContainer.push(dependency);
   }
 
-  /**
-   * Register injected handler
-   * @param identifier
-   * @param handler
-   */
-  public registerInjectedHandler(
-    identifier: Function,
-    injectedHandler: InjectedHandler
-  ) {
-    if (this.injectedHandlers.get(identifier)) {
-      const handlers = this.injectedHandlers.get(identifier) || [];
-      handlers.push(injectedHandler);
-      this.injectedHandlers.set(identifier, handlers);
-    } else {
-      this.injectedHandlers.set(identifier, [injectedHandler]);
+  public getService(identifier: DependencyIdentifier): Object {
+    // console.log('getService', {
+    //   identifier: identifier,
+    //   container: this.controllerContainer,
+    // });
+    const dependency = this.findDependency(identifier, this.serviceContainer);
+    if (!dependency) {
+      throw new Error(`${identifier} dependency not found`);
     }
+    if (dependency.instance) {
+      return dependency.instance;
+    }
+
+    // Get the class of the dependency
+    const type = dependency.type;
+    if (!type) {
+      throw new Error(
+        `Cannot determine a class of the requesting dependency "${identifier}"`
+      );
+    }
+
+    // Get the constructor params
+    const paramTypes = Reflect.getMetadata('design:paramtypes', type);
+    // Initialize the params
+    const params: any[] = paramTypes
+      ? this.initializeParams(paramTypes, this.getService)
+      : [];
+
+    // Create a new instance of the dependency with the initialized params
+    // For example: const value = new (MyClass.bind.apply(MyClass, [null, ...params]))();
+    // Equal to: const value = new MyClass(arg1, arg2);
+    const instance = new (type.bind.apply(type, [null, ...params]))() as Record<
+      string,
+      any
+    >;
+
+    if (!dependency.transient) {
+      dependency.instance = instance;
+    }
+
+    return instance;
   }
 
-  /**
-   * Register router, add router to the routers array
-   * @param router
-   */
-  public registerRouter(router: RouterHandler) {
-    this.routers.push(router);
+  public getAllServices(): DependencyMetadata[] {
+    return this.serviceContainer.map((item) => {
+      return this.getService(item.id as string);
+    });
+  }
+
+  public setService(dependency: DependencyMetadata): void {
+    this.serviceContainer.push(dependency);
   }
 }

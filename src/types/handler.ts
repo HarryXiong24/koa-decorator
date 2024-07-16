@@ -1,9 +1,11 @@
 import { RequestMethod } from './request';
+import { InstanceType } from './basic';
+
 export interface InjectedHandler {
-  object: any;
-  key: string;
+  instance: InstanceType;
+  propertyKey: string;
   type: any;
-  index?: number;
+  propertyIndex?: number;
 }
 
 export interface RouterHandler {

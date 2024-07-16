@@ -8,7 +8,6 @@ import { loadImport } from './utils/import-loader';
 import * as path from 'path';
 import 'reflect-metadata';
 import { RouterHandler } from './types/handler';
-import { DependencyMetadata } from './types/dependency';
 
 /**
  * Application class, extends from Koa
@@ -17,7 +16,7 @@ export default class Application extends Koa {
   private options: ApplicationOptions;
   private router: Router;
 
-  constructor(options: ApplicationOptions) {
+  constructor(options: ApplicationOptions = {}) {
     super();
 
     // save options
@@ -41,6 +40,7 @@ export default class Application extends Koa {
   }
 
   private initMiddlewares() {
+    console.log(this.options.middlewares);
     if (this.options.middlewares) {
       const middlewares = this.options.middlewares || [];
 
@@ -63,7 +63,7 @@ export default class Application extends Koa {
 
       middlewaresClassCollection.forEach(
         (middlewareClass: Record<string, any>) => {
-          this.use(middlewareClass.use);
+          this.use(middlewareClass.use.bind(this));
         }
       );
     }

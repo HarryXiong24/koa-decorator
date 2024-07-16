@@ -10,22 +10,22 @@ import 'reflect-metadata';
 export function Inject(typeOrName?: string) {
   return function <T extends Object>(
     target: T,
-    key: string | symbol,
-    index?: number
+    propertyKey: string | symbol,
+    propertyIndex?: number
   ) {
     if (!typeOrName) {
       typeOrName = Reflect.getMetadata(
         'design:type',
         target,
-        key as string
+        propertyKey as string
       ).name;
     }
 
     Container.registerInjectedHandler(target.constructor, {
-      object: target,
-      key: key as string,
+      instance: target,
+      propertyKey: propertyKey as string,
       type: typeOrName,
-      index,
+      propertyIndex,
     });
   };
 }
