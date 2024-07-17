@@ -1,9 +1,11 @@
 {
-  "name": "koa-decorator",
-  "version": "1.0.1",
+  "name": "koa-decorator-x",
+  "version": "1.0.0",
   "description": "Making Koa Support IOC.",
   "main": "lib/main.ts",
   "types": "lib/types/main.d.ts",
+  "author": "Harry Xiong",
+  "license": "MIT",
   "scripts": {
     "build": "node ./scripts/addTypeModule.js && cross-env NODE_ENV=production rollup -c && node ./scripts/removeTypeModule.js",
     "test": "jest",
@@ -19,8 +21,6 @@
     "prepare": "husky",
     "commit": "git-cz"
   },
-  "author": "Harry Xiong",
-  "license": "MIT",
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
