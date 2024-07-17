@@ -3,7 +3,7 @@ import { Controller, GET, Inject, POST } from '../../../src/main';
 import DemoService from '../services/demo';
 import { Context } from 'koa';
 
-@Controller('/home')
+@Controller('/demo')
 export default class DemoController {
   @Inject()
   demoService!: DemoService;
@@ -11,7 +11,6 @@ export default class DemoController {
   @GET('/list')
   public async list(ctx: Context): Promise<Result> {
     const data = await this.demoService.index();
-    console.log(data);
     return { code: 0, data: data, msg: 'OK' };
   }
 

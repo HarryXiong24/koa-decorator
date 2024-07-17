@@ -1,16 +1,16 @@
 import { Inject, Middleware } from '../../../src/main';
 import { Context, Next } from 'koa';
-import DemoService from '../services/demo';
+import DemoInjectable from '../utils/demo';
 
 @Middleware()
 export class ErrorHandler {
   @Inject()
-  demoService!: DemoService;
+  demoInjectable!: DemoInjectable;
 
   async use(ctx: Context, next: Next) {
     try {
       console.log('Error Handler Middleware');
-      console.log(this.demoService.index());
+      console.log('result', await this.demoInjectable.index());
       await next();
     } catch (err) {
       console.log(err);

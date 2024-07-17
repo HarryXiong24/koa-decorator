@@ -1,4 +1,6 @@
-export default async function ErrorHandlerFunction(ctx: any, next: any) {
+import { Context, Next } from 'koa';
+
+export default async function ErrorHandlerFunction(ctx: Context, next: Next) {
   try {
     console.log('Error Handler Middleware');
     await next();

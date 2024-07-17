@@ -1,114 +1,140 @@
-const prettierConfig = require('./.prettierrc');
-const __DEV__ = process.env.NODE_ENV !== 'production';
+import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import react from 'eslint-plugin-react';
+import eslintComments from 'eslint-plugin-eslint-comments';
+import _import from 'eslint-plugin-import';
+import jsxA11Y from 'eslint-plugin-jsx-a11y';
+import prettier from 'eslint-plugin-prettier';
+import globals from 'globals';
+import tsParser from '@typescript-eslint/parser';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import js from '@eslint/js';
+import { FlatCompat } from '@eslint/eslintrc';
 
-module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-    node: true,
-  },
-  parserOptions: {
-    ecmaVersion: 6,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
+});
+
+export default [
+  ...fixupConfigRules(
+    compat.extends(
+      'eslint:recommended',
+      'plugin:eslint-comments/recommended',
+      'plugin:import/recommended',
+      'plugin:import/typescript',
+      'plugin:jsx-a11y/recommended',
+      'plugin:prettier/recommended'
+    )
+  ).map((config) => ({
+    ...config,
+    files: ['**/*.{ts,tsx,js,jsx}'],
+  })),
+  {
+    files: ['**/*.{ts,tsx,js,jsx}'],
+
+    plugins: {
+      '@typescript-eslint': typescriptEslint,
+      react: fixupPluginRules(react),
+      'eslint-comments': fixupPluginRules(eslintComments),
+      import: fixupPluginRules(_import),
+      'jsx-a11y': fixupPluginRules(jsxA11Y),
+      prettier: fixupPluginRules(prettier),
     },
-  },
-  root: true,
-  extends: [
-    'eslint:recommended',
-    'plugin:eslint-comments/recommended',
-    'plugin:import/recommended',
-    // ts 支持
-    'plugin:import/typescript',
-    'plugin:jsx-a11y/recommended',
-    // plugin:prettier/recommended 需要为最后一个扩展
-    // 避免与 prettier 冲突
-    'plugin:prettier/recommended',
-  ],
-  // rules 可根据条件自行配置
-  rules: {
-    // prettier
-    'prettier/prettier': ['warn', prettierConfig],
-    // js
-    // 'import/default': 'off',
-    'no-shadow': 'error',
-    'no-unused-vars': 'warn',
-    'no-debugger': __DEV__ ? 'off' : 'warn', // 调试
-    'no-console': __DEV__ ? 'off' : 'warn', // 日志打印
-    'require-yield': 'warn', // 不允许 generate 函数中没有 yield
-    'import/no-named-as-default': 'off',
-    'import/no-named-as-default-member': 'off',
-    // click element muse have keyboard events
-    'jsx-a11y/click-events-have-key-events': 'off',
-    // click element must have a role property
-    'jsx-a11y/no-static-element-interactions': 'off',
-    // comments
-    'eslint-comments/disable-enable-pair': [
-      'warn',
-      {
-        allowWholeFile: true,
+
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
       },
-    ],
-  },
-  settings: {
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
-    'import/extensions': ['.tsx', '.ts', '.js', '.jsx', '.json'],
-    'import/resolver': {
-      typescript: {
-        project: ['./jsconfig.json', './tsconfig.json'],
-      },
-    },
-  },
-  // ts 规则单独覆盖
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx'],
-      // 只针对 ts 用 typescript-eslint
-      parser: '@typescript-eslint/parser',
-      // 开启静态检查
+
+      ecmaVersion: 2021,
+      sourceType: 'module',
+
       parserOptions: {
-        tsconfigRootDir: __dirname,
         ecmaFeatures: {
           jsx: true,
         },
-        project: ['./tsconfig.json'],
-      },
-      plugins: ['@typescript-eslint'],
-      extends: [
-        'plugin:@typescript-eslint/recommended',
-        'plugin:@typescript-eslint/recommended-requiring-type-checking',
-      ],
-      rules: {
-        // close js rules
-        'no-shadow': 'off',
-        // ts
-        '@typescript-eslint/no-var-requires': 'warn',
-        '@typescript-eslint/no-shadow': 'error',
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
-        '@typescript-eslint/no-unsafe-member-access': 'off',
-        // no any
-        '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-unsafe-assignment': 'off',
-        '@typescript-eslint/no-unsafe-return': 'off',
-        '@typescript-eslint/no-unsafe-call': 'off',
-        // ! operator
-        '@typescript-eslint/no-non-null-assertion': 'off',
       },
     },
-  ],
-  ignores: [
-    'node_modules',
-    'dist',
-    'dist-ssr',
-    'coverage',
-    'public',
-    'jest.config.ts',
-    'coverages',
-    'rollup.config.js',
-    'types',
-    'commitlint.config.js',
-  ],
-};
+
+    settings: {
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts', '.tsx'],
+      },
+
+      'import/extensions': ['.tsx', '.ts', '.js', '.jsx', '.json'],
+
+      'import/resolver': {
+        typescript: {
+          project: ['./jsconfig.json', './tsconfig.json'],
+        },
+      },
+    },
+
+    rules: {
+      'prettier/prettier': ['warn'],
+      'no-shadow': 'error',
+      'no-unused-vars': 'warn',
+      'require-yield': 'warn',
+      'import/no-named-as-default': 'off',
+      'import/no-named-as-default-member': 'off',
+      'jsx-a11y/click-events-have-key-events': 'off',
+      'jsx-a11y/no-static-element-interactions': 'off',
+
+      'eslint-comments/disable-enable-pair': [
+        'warn',
+        {
+          allowWholeFile: true,
+        },
+      ],
+    },
+  },
+  ...compat
+    .extends(
+      'plugin:@typescript-eslint/recommended',
+      'plugin:@typescript-eslint/recommended-requiring-type-checking'
+    )
+    .map((config) => ({
+      ...config,
+      files: ['**/*.ts', '**/*.tsx'],
+    })),
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+
+    plugins: {
+      '@typescript-eslint': typescriptEslint,
+    },
+
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 2021,
+      sourceType: 'script',
+
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+
+        project: ['./tsconfig.json'],
+      },
+    },
+
+    rules: {
+      'no-shadow': 'off',
+      '@typescript-eslint/no-var-requires': 'warn',
+      '@typescript-eslint/no-shadow': 'error',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
+];

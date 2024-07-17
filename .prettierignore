@@ -4,3 +4,4 @@ dist-ssr
 coverage
 public
 coverages
+commitlint.config.js

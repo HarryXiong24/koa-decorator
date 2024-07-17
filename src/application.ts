@@ -40,7 +40,6 @@ export default class Application extends Koa {
   }
 
   private initMiddlewares() {
-    console.log(this.options.middlewares);
     if (this.options.middlewares) {
       const middlewares = this.options.middlewares || [];
 
@@ -63,7 +62,7 @@ export default class Application extends Koa {
 
       middlewaresClassCollection.forEach(
         (middlewareClass: Record<string, any>) => {
-          this.use(middlewareClass.use.bind(this));
+          this.use(middlewareClass.use.bind(middlewareClass));
         }
       );
     }

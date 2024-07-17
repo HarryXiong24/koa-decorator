@@ -1,7 +1,6 @@
 import { DependencyIdentifier, DependencyMetadata } from '../types/dependency';
 import { InstanceType } from '../types/basic';
-import { InjectedHandler } from '../types/handler';
-import { RouterHandler } from '../types/handler';
+import { InjectedHandler, RouterHandler } from '../types/handler';
 import 'reflect-metadata';
 
 interface ControllerContainer {

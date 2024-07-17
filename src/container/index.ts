@@ -1,7 +1,6 @@
 import ContainerInstance from './instance';
 import { DependencyIdentifier, DependencyMetadata } from '../types/dependency';
-import { InjectedHandler } from '../types/handler';
-import { RouterHandler } from '../types/handler';
+import { InjectedHandler, RouterHandler } from '../types/handler';
 
 export default class Container {
   private static containerInstance = new ContainerInstance();
