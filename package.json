@@ -1,6 +1,6 @@
 {
   "name": "koa-decorator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Making Koa Support IOC.",
   "main": "lib/main.ts",
   "types": "lib/types/main.d.ts",
