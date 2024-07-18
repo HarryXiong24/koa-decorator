@@ -15,7 +15,6 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react",
     "declaration": true,
     "emitDeclarationOnly": true,
@@ -26,5 +25,5 @@
     }
   },
   "exclude": ["node_modules", "dist", "dist-ssr", "public"],
-  "include": ["example", "src", "test"]
+  "include": ["src"]
 }
