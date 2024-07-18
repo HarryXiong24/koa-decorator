@@ -20,6 +20,8 @@
     "emitDeclarationOnly": true,
     "declarationDir": "@types",
     "baseUrl": ".",
+    "outDir": "./package",
+    "rootDir": "./src",
     "paths": {
       "@/*": ["./src/*"]
     }
