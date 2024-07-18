@@ -2,6 +2,8 @@ import { Middleware } from 'koa';
 
 export interface ApplicationOptions {
   env?: string;
-  controllerDir?: string;
+  controllersDir?: string;
+  middlewaresDir?: string;
+  servicesDir?: string;
   middlewares?: Middleware[];
 }

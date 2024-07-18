@@ -5,7 +5,11 @@ import { Application } from '../../src/main';
 //   middlewares: [ErrorHandlerFunction],
 // });
 
-const app = new Application();
+const app = new Application({
+  controllersDir: './controllers',
+  middlewaresDir: './ middlewares',
+  servicesDir: './services',
+});
 
 app.listen(3000, () => {
   console.log('server is listening 3000');

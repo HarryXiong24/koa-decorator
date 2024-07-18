@@ -1,7 +1,7 @@
 {
   "name": "koa-decorator-x",
   "version": "1.0.0",
-  "description": "Making Koa Support IOC.",
+  "description": "Koa-decorator is a package that provides a set of decorators to simplify the creation and management of routes in Koa.js applications.",
   "main": "lib/main.ts",
   "types": "lib/types/main.d.ts",
   "author": "Harry Xiong",

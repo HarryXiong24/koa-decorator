@@ -1,7 +1,7 @@
 import { Service } from '../../../src/main';
 
 @Service()
-class DemoService {
+export default class DemoService {
   public async index(): Promise<
     {
       id: string;
@@ -15,5 +15,3 @@ class DemoService {
     ];
   }
 }
-
-export default DemoService;

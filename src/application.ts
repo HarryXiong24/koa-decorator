@@ -51,7 +51,7 @@ export default class Application extends Koa {
 
       const dir = path.join(
         process.cwd(),
-        this.options.controllerDir || './src/middlewares'
+        this.options.middlewaresDir || './src/middlewares'
       );
       // load middlewares
       loadImport(dir);
@@ -72,7 +72,7 @@ export default class Application extends Koa {
     // load controllers from the specified directory
     const dir = path.join(
       process.cwd(),
-      this.options.controllerDir || './src/controllers'
+      this.options.controllersDir || './src/controllers'
     );
     // load controllers
     loadImport(dir);
