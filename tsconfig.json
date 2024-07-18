@@ -18,7 +18,7 @@
     "jsx": "react",
     "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "./types",
+    "declarationDir": "/",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
