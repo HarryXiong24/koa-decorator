@@ -20,12 +20,12 @@
     "emitDeclarationOnly": true,
     "declarationDir": "@types",
     "baseUrl": ".",
-    "outDir": "./package",
-    "rootDir": "package",
+    "outDir": "src",
+    "rootDir": "src",
     "paths": {
-      "@/*": ["package/*"]
+      "@/*": ["src/*"]
     }
   },
   "exclude": ["node_modules", "dist", "dist-ssr", "public"],
-  "include": ["package"]
+  "include": ["src"]
 }
