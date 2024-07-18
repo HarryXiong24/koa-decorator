@@ -1,4 +1,4 @@
-import { Inject, Middleware } from 'koa-decorator-x';
+import { Inject, Middleware } from '../../../src';
 import { Context, Next } from 'koa';
 import DemoInjectable from '../utils/demo';
 

@@ -1,6 +1,6 @@
 {
   "name": "koa-decorator-x",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Koa-decorator is a package that provides a set of decorators to simplify the creation and management of routes in Koa.js applications.",
   "main": "./package/index.js",
   "typings": "./package/@types/index.d.ts",
@@ -20,7 +20,7 @@
     "package.json"
   ],
   "scripts": {
-    "build": "node ./scripts/addTypeModule.js && cross-env NODE_ENV=production rollup -c && node ./scripts/removeTypeModule.js",
+    "build": "cross-env NODE_ENV=production rollup -c",
     "test": "jest",
     "test:cov": "jest --coverage",
     "lint": "npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
@@ -108,6 +108,8 @@
     "@koa/router": "^12.0.1",
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
-    "reflect-metadata": "^0.2.2"
-  }
+    "reflect-metadata": "^0.2.2",
+    "rollup-plugin-dts": "^6.1.1"
+  },
+  "type": "module"
 }

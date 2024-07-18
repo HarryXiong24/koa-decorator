@@ -1,4 +1,4 @@
-import { Injectable } from 'koa-decorator-x';
+import { Injectable } from '../../../src';
 
 @Injectable()
 class DemoInjectable {
