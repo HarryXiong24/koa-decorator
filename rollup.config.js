@@ -12,7 +12,7 @@ const plugins = isProduction ? [uglify()] : [];
 const commonAliases = [];
 const config = {
   input: './src/main',
-  output: './lib/bundle',
+  output: './packages/bundle',
 };
 
 export default {

@@ -2,7 +2,7 @@
 
 ## Description
 
-Koa-decorator is a package that provides a set of decorators to simplify the creation and management of routes in Koa.js applications. 
+Koa-decorator is a package that provides a set of decorators to simplify the creation and management of routes in Koa.js applications.
 
 These decorators allow you to define routes, middlewares and services directly, making your code cleaner and more maintainable.
 
@@ -12,13 +12,13 @@ These decorators allow you to define routes, middlewares and services directly, 
 
 Enter demo directory:
 
-``` bash
+```bash
 cd example
 ```
 
 For npm:
 
-``` bash
+```bash
 npm install
 
 npm run dev
@@ -26,7 +26,7 @@ npm run dev
 
 For pnpm:
 
-``` bash
+```bash
 pnpm install
 
 pnpm run dev
@@ -34,8 +34,8 @@ pnpm run dev
 
 For yarn:
 
-``` bash
-yarn 
+```bash
+yarn
 
 yarn dev
 ```
@@ -44,21 +44,22 @@ yarn dev
 
 ### Easy run the server:
 
-``` ts
+```ts
 import { Application } from '../../src/main';
 
 const app = new Application();
 
 app.listen(3000, () => {
   console.log('server is listening 3000');
-});s
+});
+s;
 ```
 
 ### Directory conventions
 
 In the root directory, we have these directories by default:
 
-``` bash
+```bash
 .
 ├── controllers
 │   ├── xxxController.ts
@@ -76,11 +77,11 @@ And our framework will scan the files in these directories automatically. So we 
 
 If you want to modify the structure of default directories. Please modify the config synchronously.
 
-``` ts
+```ts
 const app = new Application({
-  controllerDir: './controllers',
-  middlewareDir: './ middlewares'
-  servicesDir: './services',
+  controllersDir: '/src/controllers',
+  middlewaresDir: '/src/middlewares',
+  servicesDir: '/src/services',
 });
 ```
 
@@ -88,14 +89,13 @@ const app = new Application({
 
 We have already pre-installed `@koa/router`.
 
-You do not need to define routers by using a `router.get('/list', handleList)`. 
+You do not need to define routers by using a `router.get('/list', handleList)`.
 
 Instead, you just need to create a controller class in `controllers` directory. And the use `@Controller`, `@GET`, `@POST` etc. The router will be register automatically.
 
-``` ts
+```ts
 @Controller('/demo')
 export default class DemoController {
-
   @GET('/list')
   public async list(ctx: Context): Promise<Result> {
     return { code: 0, data: data, msg: 'OK' };
@@ -110,9 +110,9 @@ export default class DemoController {
 
 ## Define middlewares
 
- You just need to create a middleware class in `middlewares` directory. And the use `@Middleware` to define a middleware. The middleware will be register automatically.
+You just need to create a middleware class in `middlewares` directory. And the use `@Middleware` to define a middleware. The middleware will be register automatically.
 
-``` ts
+```ts
 import { Inject, Middleware } from '../../../src/main';
 import { Context, Next } from 'koa';
 
@@ -137,7 +137,7 @@ They are the same concept and just use different name. Service is focused on som
 
 First, use `@Service` to register a service class.
 
-``` ts
+```ts
 @Service()
 export default class DemoService {
   public async index(): Promise<
@@ -157,7 +157,7 @@ export default class DemoService {
 
 And then, you can inject it to any class instances.
 
-``` ts
+```ts
 import Result from '../models/result';
 import { Controller, GET, Inject, POST } from '../../../src/main';
 import DemoService from '../services/demo';
@@ -183,7 +183,7 @@ export default class DemoController {
 
 `Injectable` is the same.
 
-``` ts 
+```ts
 import { Injectable } from '../../../src/main';
 
 @Injectable()
@@ -205,7 +205,7 @@ class DemoInjectable {
 export default DemoInjectable;
 ```
 
-``` ts
+```ts
 import { Inject, Middleware } from '../../../src/main';
 import { Context, Next } from 'koa';
 import DemoInjectable from '../utils/demo';

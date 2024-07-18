@@ -17,6 +17,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "./types",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

@@ -6,9 +6,9 @@ import { Application } from '../../src/main';
 // });
 
 const app = new Application({
-  controllersDir: './controllers',
-  middlewaresDir: './ middlewares',
-  servicesDir: './services',
+  controllersDir: '/src/controllers',
+  middlewaresDir: '/src/middlewares',
+  servicesDir: '/src/services',
 });
 
 app.listen(3000, () => {
