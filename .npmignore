@@ -1,6 +1,6 @@
 .husky
 .vscode
-.scripts
+scripts
 .gitignore
 .git
 node_modules
