@@ -1,6 +1,6 @@
-export { Controller } from './controller';
-export { Inject } from './inject';
-export { Service } from './service';
-export { Request, GET, POST, PUT, DELETE, HEAD, DEL, OPTIONS } from './request';
-export { Middleware } from './middleware';
-export { Injectable } from './injectable';
+export * from './controller';
+export * from './inject';
+export * from './service';
+export * from './request';
+export * from './middleware';
+export * from './injectable';
