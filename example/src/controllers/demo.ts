@@ -1,5 +1,5 @@
 import Result from '../models/result';
-import { Controller, GET, Inject, POST } from '../../../src/main';
+import { Controller, GET, Inject, POST } from '../../../src';
 import DemoService from '../services/demo';
 import { Context } from 'koa';
 

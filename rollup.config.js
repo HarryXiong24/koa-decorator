@@ -11,15 +11,15 @@ const isProduction = process.env.NODE_ENV === 'production';
 const plugins = isProduction ? [uglify()] : [];
 const commonAliases = [];
 const config = {
-  input: './src/main',
-  output: './packages/bundle',
+  input: './src/index',
+  output: './packages/index',
 };
 
 export default {
   input: `${config.input}.ts`, // 入口文件
   output: [
     {
-      file: `${config.output}.cjs.js`, // 打包后的存放文件
+      file: `${config.output}.js`, // 打包后的存放文件
       format: 'cjs', // 输出格式  "amd", "cjs", "system", "es", "iife", "umd".
       name: 'bundleName', // 如果 iife, umd 需要指定一个全局变量
       sourcemap: true, // 生成 bundle.map.js 文件，方便调试

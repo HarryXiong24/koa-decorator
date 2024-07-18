@@ -1,4 +1,4 @@
-import { Service } from '../../../src/main';
+import { Service } from '../../../src';
 
 @Service()
 export default class DemoService {

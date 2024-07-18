@@ -1,4 +1,4 @@
-import { Injectable } from '../../../src/main';
+import { Injectable } from '../../../src';
 
 @Injectable()
 class DemoInjectable {
