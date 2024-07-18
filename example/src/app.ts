@@ -1,4 +1,4 @@
-import { Application } from '../../src/main';
+import { Application } from 'koa-decorator-x';
 // import ErrorHandlerFunction from './middlewares/error-handler-function';
 
 // const app = new Application({

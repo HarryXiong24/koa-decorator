@@ -6,6 +6,11 @@
   "types": "/packages/types/main.d.ts",
   "author": "Harry Xiong",
   "license": "MIT",
+  "files": [
+    "packages",
+    "README.md",
+    "package.json"
+  ],
   "scripts": {
     "build": "node ./scripts/addTypeModule.js && cross-env NODE_ENV=production rollup -c && node ./scripts/removeTypeModule.js",
     "test": "jest",
