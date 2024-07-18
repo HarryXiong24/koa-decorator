@@ -1,6 +1,6 @@
 {
   "name": "koa-decorator-x",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Koa-decorator is a package that provides a set of decorators to simplify the creation and management of routes in Koa.js applications.",
   "main": "./package/index.js",
   "typings": "./package/@types/index.d.ts",
@@ -15,7 +15,7 @@
     "node"
   ],
   "files": [
-    "packages",
+    "package",
     "README.md",
     "package.json"
   ],
