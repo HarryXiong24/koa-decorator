@@ -41,7 +41,12 @@ export default {
     include: 'src/**',
   },
   plugins: [
-    typescript(),
+    typescript({
+      tsconfig: './tsconfig.json',
+      declaration: true,
+      declarationDir: '/@types',
+      emitDeclarationOnly: true,
+    }),
     nodeResolve(),
     json(),
     commonjs(),
