@@ -12,8 +12,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 const plugins = isProduction ? [uglify()] : [];
 const commonAliases = [];
 const config = {
-  input: './src/index',
-  output: './package/index',
+  input: './package/index',
+  output: './lib/index',
 };
 
 export default [

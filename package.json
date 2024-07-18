@@ -1,10 +1,10 @@
 {
   "name": "koa-decorator-x",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Koa-decorator is a package that provides a set of decorators to simplify the creation and management of routes in Koa.js applications.",
-  "main": "./package/index.js",
-  "typings": "./package/@types/index.d.ts",
-  "types": "./package/@types/index.d.ts",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.ts",
+  "types": "./lib/index.ts",
   "author": "Harry Xiong",
   "license": "MIT",
   "keywords": [

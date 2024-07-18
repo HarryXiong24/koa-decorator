@@ -21,11 +21,11 @@
     "declarationDir": "@types",
     "baseUrl": ".",
     "outDir": "./package",
-    "rootDir": "./src",
+    "rootDir": "package",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["package/*"]
     }
   },
   "exclude": ["node_modules", "dist", "dist-ssr", "public"],
-  "include": ["src"]
+  "include": ["package"]
 }
