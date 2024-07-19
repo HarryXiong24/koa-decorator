@@ -10,7 +10,7 @@
   "author": "Harry Xiong",
   "license": "MIT",
   "dependencies": {
-    "koa-decorator-x": "^1.5.0"
+    "koa-decorator-x": "^1.6.0"
   },
   "devDependencies": {
     "@types/koa": "^2.15.0",

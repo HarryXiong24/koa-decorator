@@ -109,10 +109,6 @@ export default class ContainerInstance
    * @returns
    */
   public getController(identifier: DependencyIdentifier): Object {
-    // console.log('getController', {
-    //   identifier: identifier,
-    //   container: this.controllerContainer,
-    // });
     const dependency = this.findDependency(
       identifier,
       this.controllerContainer
@@ -236,10 +232,6 @@ export default class ContainerInstance
   }
 
   public getService(identifier: DependencyIdentifier): Object {
-    // console.log('getService', {
-    //   identifier: identifier,
-    //   container: this.controllerContainer,
-    // });
     const dependency = this.findDependency(identifier, this.serviceContainer);
     if (!dependency) {
       throw new Error(`${identifier} dependency not found`);
