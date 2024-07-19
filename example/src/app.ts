@@ -1,14 +1,11 @@
-import { Application } from 'koa-decorator-x';
-// import ErrorHandlerFunction from './middlewares/error-handler-function';
-
-// const app = new Application({
-//   middlewares: [ErrorHandlerFunction],
-// });
+import { Application } from '../../src';
+import ErrorHandlerFunction from './middlewares/error-handler-function';
 
 const app = new Application({
-  controllersDir: '/src/controllers',
-  middlewaresDir: '/src/middlewares',
-  servicesDir: '/src/services',
+  controllersDir: './src/controllers',
+  middlewaresDir: './src/middlewares',
+  servicesDir: './src/services',
+  middlewares: [ErrorHandlerFunction],
 });
 
 app.listen(3000, () => {

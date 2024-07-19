@@ -54,8 +54,13 @@ export default class Application extends Koa {
       process.cwd(),
       this.options.middlewaresDir || './src/middlewares'
     );
+
+    console.log(dir);
+
     // load middlewares
     loadImport(dir);
+
+    console.log(Container.getAllMiddlewares());
 
     Container.getAllMiddlewares().forEach((item: Object) => {
       middlewaresClassCollection.push(item);

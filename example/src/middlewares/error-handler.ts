@@ -1,15 +1,15 @@
-import { Inject, Middleware } from 'koa-decorator-x;
+import { Inject, Middleware } from '../../../src';
 import { Context, Next } from 'koa';
 import DemoInjectable from '../utils/demo';
 
 @Middleware()
-export class ErrorHandler {
+export class ErrorHandlerClass {
   @Inject()
   demoInjectable!: DemoInjectable;
 
   async use(ctx: Context, next: Next) {
     try {
-      console.log('Error Handler Middleware');
+      console.log('Error Handler Middleware Class Mode is running');
       console.log('result', await this.demoInjectable.index());
       await next();
     } catch (err) {
