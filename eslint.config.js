@@ -136,5 +136,6 @@ export default [
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
+    ignores: ['scripts/**'],
   },
 ];

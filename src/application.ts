@@ -46,26 +46,26 @@ export default class Application extends Koa {
       middlewares.forEach((m) => {
         this.use(m);
       });
-    } else {
-      const middlewaresClassCollection: Record<string, any>[] = [];
-
-      const dir = path.join(
-        process.cwd(),
-        this.options.middlewaresDir || './src/middlewares'
-      );
-      // load middlewares
-      loadImport(dir);
-
-      Container.getAllMiddlewares().forEach((item: Object) => {
-        middlewaresClassCollection.push(item);
-      });
-
-      middlewaresClassCollection.forEach(
-        (middlewareClass: Record<string, any>) => {
-          this.use(middlewareClass.use.bind(middlewareClass));
-        }
-      );
     }
+
+    const middlewaresClassCollection: Record<string, any>[] = [];
+
+    const dir = path.join(
+      process.cwd(),
+      this.options.middlewaresDir || './src/middlewares'
+    );
+    // load middlewares
+    loadImport(dir);
+
+    Container.getAllMiddlewares().forEach((item: Object) => {
+      middlewaresClassCollection.push(item);
+    });
+
+    middlewaresClassCollection.forEach(
+      (middlewareClass: Record<string, any>) => {
+        this.use(middlewareClass.use.bind(middlewareClass));
+      }
+    );
   }
 
   private initRouter() {

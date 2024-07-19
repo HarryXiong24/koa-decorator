@@ -20,7 +20,7 @@
     "package.json"
   ],
   "scripts": {
-    "build": "cross-env NODE_ENV=production rollup -c",
+    "build": "node ./scripts/addTypeModule.js && cross-env NODE_ENV=production rollup -c && node ./scripts/removeTypeModule.js && node ./scripts/removeTypes.js",
     "test": "jest",
     "test:cov": "jest --coverage",
     "lint": "npm run lint:eslint && npm run lint:stylelint && npm run lint:prettier",
@@ -110,6 +110,5 @@
     "koa-bodyparser": "^4.4.1",
     "reflect-metadata": "^0.2.2",
     "rollup-plugin-dts": "^6.1.1"
-  },
-  "type": "module"
+  }
 }
