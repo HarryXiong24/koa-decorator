@@ -6,38 +6,24 @@ Koa-decorator is a package that provides a set of decorators to simplify the cre
 
 These decorators allow you to define routes, middlewares and services directly, making your code cleaner and more maintainable.
 
-## Usage
-
-## How to run demo code
-
-Enter demo directory:
-
-```bash
-cd example
-```
+## Install
 
 For npm:
 
 ```bash
-npm install
-
-npm run dev
+npm install koa-decorator-x
 ```
 
 For pnpm:
 
 ```bash
-pnpm install
-
-pnpm run dev
+pnpm install koa-decorator-x
 ```
 
 For yarn:
 
 ```bash
-yarn
-
-yarn dev
+yarn add koa-decorator-x
 ```
 
 ## Usage
@@ -45,7 +31,7 @@ yarn dev
 ### Easy run the server:
 
 ```ts
-import { Application } from '../../src/main';
+import { Application } from 'koa-decorator-x';
 
 const app = new Application();
 
@@ -78,10 +64,13 @@ And our framework will scan the files in these directories automatically. So we 
 If you want to modify the structure of default directories. Please modify the config synchronously.
 
 ```ts
+import { Application } from 'koa-decorator-x';
+
 const app = new Application({
   controllersDir: '/src/controllers',
   middlewaresDir: '/src/middlewares',
   servicesDir: '/src/services',
+  middlewares: [],
 });
 ```
 
@@ -94,6 +83,8 @@ You do not need to define routers by using a `router.get('/list', handleList)`.
 Instead, you just need to create a controller class in `controllers` directory. And the use `@Controller`, `@GET`, `@POST` etc. The router will be register automatically.
 
 ```ts
+import { Controller, GET, POST } from 'koa-decorator-x';
+
 @Controller('/demo')
 export default class DemoController {
   @GET('/list')
@@ -113,7 +104,7 @@ export default class DemoController {
 You just need to create a middleware class in `middlewares` directory. And the use `@Middleware` to define a middleware. The middleware will be register automatically.
 
 ```ts
-import { Inject, Middleware } from '../../../src/main';
+import { Inject, Middleware } from 'koa-decorator-x';
 import { Context, Next } from 'koa';
 
 @Middleware()
@@ -131,6 +122,19 @@ export class ErrorHandler {
 }
 ```
 
+At the same time, you can also apply third-party middlewares by registering in the `Application`:
+
+```ts
+import { Application } from 'koa-decorator-x';
+
+const app = new Application({
+  controllersDir: '/src/controllers',
+  middlewaresDir: '/src/middlewares',
+  servicesDir: '/src/services',
+  middlewares: [],
+});
+```
+
 ### Service & Injectable
 
 They are the same concept and just use different name. Service is focused on some services you need to provide. Injectable just the class you want to have inject function.
@@ -138,6 +142,7 @@ They are the same concept and just use different name. Service is focused on som
 First, use `@Service` to register a service class.
 
 ```ts
+import { Service } from 'koa-decorator-x';
 @Service()
 export default class DemoService {
   public async index(): Promise<
@@ -159,7 +164,7 @@ And then, you can inject it to any class instances.
 
 ```ts
 import Result from '../models/result';
-import { Controller, GET, Inject, POST } from '../../../src/main';
+import { Controller, GET, Inject, POST } from 'koa-decorator-x';
 import DemoService from '../services/demo';
 import { Context } from 'koa';
 
@@ -184,7 +189,7 @@ export default class DemoController {
 `Injectable` is the same.
 
 ```ts
-import { Injectable } from '../../../src/main';
+import { Injectable } from 'koa-decorator-x';
 
 @Injectable()
 class DemoInjectable {
@@ -206,7 +211,7 @@ export default DemoInjectable;
 ```
 
 ```ts
-import { Inject, Middleware } from '../../../src/main';
+import { Inject, Middleware } from 'koa-decorator-x';
 import { Context, Next } from 'koa';
 import DemoInjectable from '../utils/demo';
 
