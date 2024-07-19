@@ -123,4 +123,3 @@ declare class Application extends Koa {
 }
 
 export { Application, Container, Controller, DEL, DELETE, GET, HEAD, Inject, Injectable, Middleware, OPTIONS, POST, PUT, Request, Service };
-//# sourceMappingURL=index.d.ts.map
