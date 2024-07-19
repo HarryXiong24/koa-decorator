@@ -1,4 +1,4 @@
-import { Service } from '../../../src';
+import { Service } from 'koa-decorator-x';
 
 @Service()
 export default class DemoService {
